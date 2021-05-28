@@ -1,9 +1,11 @@
+import Layout from '../components/Layout';
+
 const HomePage = () => {
   return (
-    <div>
-      Welcome to DJ-Events
-    </div>
-  )
-}
+    <Layout>
+      <h1>Home</h1>
+    </Layout>
+  );
+};
 
-export default HomePage
+export default HomePage;

@@ -1,8 +1,10 @@
+import Layout from '../../components/Layout';
+
 const EventsPage = () => {
   return (
-    <div>
+    <Layout>
       <h1>This is the events page</h1>
-    </div>
+    </Layout>
   );
 };
 
