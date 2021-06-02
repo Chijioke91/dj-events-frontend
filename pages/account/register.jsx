@@ -12,6 +12,8 @@ const RegisterPage = () => {
   const [formData, setFormData] = useState({ username: '', email: '', password: '', password2: '' });
   const { username, email, password, password2 } = formData;
 
+  useEffect(() => error && toast.error(error));
+
   const onChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const onSubmit = (e) => {
@@ -21,7 +23,7 @@ const RegisterPage = () => {
       return toast.error('Passwords do not match');
     }
 
-    register(formData);
+    register({ username, email, password });
   };
 
   return (
