@@ -12,11 +12,12 @@ const LoginPage = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const { email, password } = formData;
 
+  useEffect(() => error && toast.error(error));
+
   const onChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const onSubmit = (e) => {
     e.preventDefault();
-
     login(formData);
   };
 
