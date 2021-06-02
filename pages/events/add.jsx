@@ -6,9 +6,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import Layout from '@/components/Layout';
 import styles from '@/styles/Form.module.css';
 import { API_URL } from '@/config/index';
+import { parseCookie } from '@/helpers/index';
 
-const AddEventPage = () => {
+const AddEventPage = ({ token }) => {
   const router = useRouter();
+
   const [formData, setFormData] = useState({
     name: '',
     performers: '',
@@ -36,11 +38,16 @@ const AddEventPage = () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(formData),
     });
 
     if (!res.ok) {
+      if (res.status === 401 || res.status === 403) {
+        return toast.error('You are Not Authorized to Perform this Action');
+      }
+
       return toast.error('Something Went Wrong');
     }
 
@@ -91,6 +98,16 @@ const AddEventPage = () => {
       </form>
     </Layout>
   );
+};
+
+export const getServerSideProps = async ({ req }) => {
+  const { token } = parseCookie(req);
+
+  return {
+    props: {
+      token,
+    },
+  };
 };
 
 export default AddEventPage;

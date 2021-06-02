@@ -11,8 +11,9 @@ import Modal from '@/components/Modal';
 import styles from '@/styles/Form.module.css';
 import { API_URL } from '@/config/index';
 import ImageUpload from '@/components/ImageUpload';
+import { parseCookie } from '@/helpers/index';
 
-const EditEventPage = ({ evt }) => {
+const EditEventPage = ({ evt, token }) => {
   const router = useRouter();
   const [imagePreview, setImagePreview] = useState(evt.image ? evt.image.formats.thumbnail.url : null);
   const [showModal, setShowModal] = useState(false);
@@ -43,6 +44,7 @@ const EditEventPage = ({ evt }) => {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(formData),
     });
@@ -59,6 +61,7 @@ const EditEventPage = ({ evt }) => {
   const imageUploaded = async () => {
     const res = await fetch(`${API_URL}/events/${evt.id}`);
     const data = await res.json();
+    console.log(data);
     setImagePreview(data.image.formats.thumbnail.url);
     setShowModal(false);
   };
@@ -119,21 +122,21 @@ const EditEventPage = ({ evt }) => {
       </div>
 
       <Modal show={showModal} onClose={() => setShowModal(false)}>
-        <ImageUpload evtId={evt.id} imageUploaded={imageUploaded} />
+        <ImageUpload evtId={evt.id} imageUploaded={imageUploaded} token={token} />
       </Modal>
     </Layout>
   );
 };
 
 export const getServerSideProps = async ({ params: { id }, req }) => {
+  const { token } = parseCookie(req);
   const res = await fetch(`${API_URL}/events/${id}`);
   const evt = await res.json();
-
-  console.log(req.headers.cookie);
 
   return {
     props: {
       evt,
+      token,
     },
   };
 };
